@@ -19,6 +19,13 @@ namespace mcal{
         const uint32_t ahb1enr = rcc_base + 0x30;
         const uint32_t ahb2enr = rcc_base + 0x34;
         const uint32_t ahb3enr = rcc_base + 0x38;
+        
+        // APB1 Enable register needed to enable the timer.
+        // Timer is connected to the APB1 BUS
+        const uint32_t apb1enr = rcc_base + 0x40;
+        
+        // Timer 2 based address
+        const uint32_t tim2_base_addr = periph_base;
 
 		const uint32_t systick_ctrl_offset  = 0x000;  // SysTick Control and Status Register
 		const uint32_t systick_load_offset  = 0x004;  // SysTick Reload Value Register
@@ -68,15 +75,85 @@ namespace mcal{
         const uint32_t gpioc_idr = gpioc + idr_offset;
         const uint32_t gpioc_odr = gpioc + odr_offset;
         const uint32_t gpioc_bsrr = gpioc + bsrr_offset;
+        
+        // TIM Registers
+        // Timer 2 has registers like other General Purpose timers.
+        // Such as auto-reload, count, 4 control, and prescaler registers.
+        const uint32_t tim_psc_offset = 0x28;
+        const uint32_t tim_arr_offset = 0x2C;
+        const uint32_t tim_cnt_offset = 0x24;
+        
+        const uint32_t tim_cr1_offset = 0x00;
+        const uint32_t tim_cr2_offset = 0x04;
+        const uint32_t tim_cr3_offset = 0x3C;
+        const uint32_t tim_cr4_offset = 0x40;
+        
+        const uint32_t tim_smcr_offset = 0x08;
+        const uint32_t tim_dier_offset = 0x0C;
+        
+        const uint32_t tim_sr_offset = 0x10;
+        const uint32_t tim_egr_offset = 0x14;
+        
+        const uint32_t tim_ccmr1_offset = 0x18;
+        
+        const uint32_t tim_ccmr2_offset = 0x1C;
+        const uint32_t tim_ccer_offset = 0x20;
+        
+        // Timer 2 registers
+        const uint32_t tim2_smcr = tim_smcr_offset + tim2_base_addr;
+        const uint32_t tim2_dier = tim_dier_offset + tim2_base_addr;
+        
+        const uint32_t tim2_sr = tim_sr_offset + tim2_base_addr;
+        const uint32_t tim2_egr = tim_egr_offset + tim2_base_addr;
+        
+        const uint32_t tim2_ccmr1 = tim_ccmr1_offset + tim2_base_addr;
+        const uint32_t tim2_ccmr2 = tim_ccmr2_offset + tim2_base_addr;
+        const uint32_t tim2_ccer = tim_ccer_offset + tim2_base_addr;
+        
+        const uint32_t tim2_psc = tim_psc_offset + tim2_base_addr;
+        const uint32_t tim2_arr = tim_arr_offset + tim2_base_addr;
+        const uint32_t tim2_cnt = tim_cnt_offset + tim2_base_addr;
+        
+        const uint32_t tim2_cr1 = tim_cr1_offset + tim2_base_addr;
+        const uint32_t tim2_cr2 = tim_cr2_offset + tim2_base_addr;
+        const uint32_t tim2_cr3 = tim_cr3_offset + tim2_base_addr;
+        const uint32_t tim2_cr4 = tim_cr4_offset + tim2_base_addr;
+        
+        // Timer type registers
+        typedef struct
+        {
+            volatile uint32_t CR1;              /*!< TIM control register 1,             Address: */
+            volatile uint32_t CR2;              /*!< TIM control register 2,             Address: */
+            volatile uint32_t SMCR;             /*!< TIM slave mode control register,    Address: */
+            volatile uint32_t DIER;             /*!< TIM DMA/interrupt enable register,  Address: */
+            volatile uint32_t SR;               /*!< TIM status register,                Address: */
+            volatile uint32_t EGR;              /*!< TIM event generation register,      Address: */
+            volatile uint32_t CCMR1;            /*!< TIM capture/compare mode register 1,    Address: */
+            volatile uint32_t CCMR2;            /*!< TIM capture/compare mode register 2,    Address: */
+            volatile uint32_t CCER;             /*!< TIM capture/compare enable register,    Address: */
+            volatile uint32_t CNT;              /*!< TIM counter register,    Address: */
+            volatile uint32_t PSC;              /*!< TIM prescaler,    Address: */
+            volatile uint32_t ARR;              /*!< TIM autoreload register,    Address: */
+            volatile uint32_t RCR;              /*!< TIM repitition counter register,    Address: */
+            volatile uint32_t CCR1;             /*!< TIM capture/compare register 1,     Address: */
+            volatile uint32_t CCR2;             /*!< TIM capture/compare register 2,     Address: */
+            volatile uint32_t CCR3;             /*!< TIM capture/compare register 3,     Address: */
+            volatile uint32_t CCR4;             /*!< TIM capture/compare register 4,     Address: */
+            volatile uint32_t BDTR;             /*!< TIM break and dead-time register,   Address: */
+            volatile uint32_t DCR;              /*!< TIM DMA control register,           Address: */
+            volatile uint32_t DMAR;             /*!< TIM DMA address for full transfer,  Address: */
+            volatile uint32_t OR;               /*!< TIM option register,                Address: */
+        } TIM_TypeDef;
 	}
 }
 
 // Typecast systick_base address
-#define SysTick ((mcal::reg::SysTick_Type*) mcal::reg::systick_base)
+#define SysTick     ((mcal::reg::SysTick_Type*) mcal::reg::systick_base)
 // System Handler to set systick priority - using system handler priority register 3
-#define SYSPRI3 (*reinterpret_cast<volatile uint32_t *>(0xE000ED20))
+#define SYSPRI3     (*reinterpret_cast<volatile uint32_t *>(0xE000ED20))
 // Interrupt control and sate register (pg. 4-13 CortexM4)
-#define INTCTRL (*reinterpret_cast<volatile uint32_t *>(0xE000ED04))
+#define INTCTRL     (*reinterpret_cast<volatile uint32_t *>(0xE000ED04))
+#define TIM2        ((mcal::reg::TIM_TypeDef*)mcal::reg::tim2_base_addr)
 
 
 
