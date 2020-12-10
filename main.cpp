@@ -10,6 +10,7 @@ uint32_t dsp_task_counter;
 uint32_t diagnostic_task_counter;
 uint32_t colorsensing_task_counter;
 uint32_t soilmoisture_task_counter;
+uint32_t ptask_one_counter;
 
 void led_task(void);
 void dsp_task(void);
@@ -65,3 +66,9 @@ void soilmoisture_task(void){
     }
 }
 
+// From assembly, add extern C keyword
+extern "C" void osPeriodicTask(void);
+void osPeriodicTask(void){
+    sysOS.osClearUIF();
+    ptask_one_counter++;
+}

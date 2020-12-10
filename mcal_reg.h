@@ -7,6 +7,11 @@
 using namespace std;
 
 namespace mcal{
+    namespace params {
+        // This means bit28 of iser0 must be set to 1
+        const uint32_t tim2_rq_enable = 0x10000000;
+    }
+    
 	namespace reg{
 		const uint32_t scs_base       = 0xE000E000UL;   // System control space
 		const uint32_t systick_offset = 0x0010UL;
@@ -26,6 +31,14 @@ namespace mcal{
         
         // Timer 2 based address
         const uint32_t tim2_base_addr = periph_base;
+        
+        // Ref.: CortexM4 Generic user guide pg. 219
+        /* iser0 enables interrupt for IRQ#0 - IRQ31 */
+        const uint32_t iser0 = 0xE000E100UL;
+        /* iser1 enables interrupt for IRQ#32 - IRQ#64 */
+        const uint32_t iser1 = 0xE000E104UL;
+        /* iser2 enables interrupt for IRQ#65 - IRQ#96 */
+        const uint32_t iser2 = 0xE000E108UL;
 
 		const uint32_t systick_ctrl_offset  = 0x000;  // SysTick Control and Status Register
 		const uint32_t systick_load_offset  = 0x004;  // SysTick Reload Value Register

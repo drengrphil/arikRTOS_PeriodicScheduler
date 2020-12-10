@@ -35,6 +35,7 @@ class ArikeOS{
 		// Launch the kernel
 		void osKernelLaunch(void);
         void osCurrentThreadYield(void);
+        void osClearUIF(void);
 
 		// Mutators (or setters)
 		void setOS_sysBusFrequency(uint32_t freq);

@@ -175,6 +175,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>soilmoisture_task_counter,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>ptask_one_counter,0x0A</ItemText>
+        </Ww>
       </WatchWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>
@@ -311,6 +316,18 @@
       <bDave2>0</bDave2>
       <PathWithFileName>.\arikeosa.s</PathWithFileName>
       <FilenameWithoutPath>arikeosa.s</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>2</GroupNumber>
+      <FileNumber>7</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\base_tcb.h</PathWithFileName>
+      <FilenameWithoutPath>base_tcb.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

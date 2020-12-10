@@ -1,7 +1,6 @@
 #include "arikeos.h"
 #include "mcal_reg.h"
-// #include "../../Drivers/CMSIS/Include/cmsis_gcc.h"
-
+#include "base_tcb.h"
 
 using namespace std;
 
@@ -11,15 +10,6 @@ using namespace std;
 
 extern "C" void osSchedulerLaunch(void);
 
-// Thread control block
-class tcb{
-    
-    public:
-        int32_t *stackPtr;   /* Pointer to stack */
-        struct tcb *nextPtr; /* Pointer to next thread */
-};
-
-typedef class tcb tcbType;
 tcbType *currentThread; // Current task (thread)
 
 // Maximum number of tasks possible.
@@ -97,6 +87,22 @@ osflag_type ArikeOS::osKernelAddThreads(function_type task0, function_type task1
 void ArikeOS::osKernelInit(void){
 	// bus_frequency = 16MHz (different for other MCU)
 	this->millis_prescaler = (this->bus_frequency / 1000); //  millisec
+    
+    /*
+     * Enable TIM2 for periodic scheduling clock source 16MHz
+     */
+    // Enable clock access to TIM2
+    mcal::reg::reg_access<uint32_t, uint32_t,mcal::reg::apb1enr,(1U<<0)>::reg_or();
+    // Divide by 16000
+    mcal::reg::reg_access<uint32_t, uint32_t,mcal::reg::tim2_psc,(16000-1)>::reg_set();
+    // Divide again by 1000
+    mcal::reg::reg_access<uint32_t, uint32_t,mcal::reg::tim2_arr,(1000-1)>::reg_set();
+    // Enable counter
+    mcal::reg::reg_access<uint32_t, uint32_t,mcal::reg::tim2_cr1,(1U<<0)>::reg_or();
+    // Enable UIE
+    mcal::reg::reg_access<uint32_t, uint32_t,mcal::reg::tim2_dier,(1U<<0)>::reg_or();
+    // Enable interrupt in NVIC - enable interrupt globally
+    mcal::reg::reg_access<uint32_t, uint32_t,mcal::reg::iser0,mcal::params::tim2_rq_enable>::reg_set();
 }
 
 void ArikeOS::osKernelLaunch(void){
@@ -204,6 +210,11 @@ void ArikeOS::osCurrentThreadYield(void){
 				mcal::reg::systick_val,
 				0x00>::reg_set();
     INTCTRL = 0x04000000; // trigger sys_tick, switch thread to next one
+}
+
+// Clear UIF
+void ArikeOS::osClearUIF(void){
+    TIM2->SR = 0;
 }
 
 ArikeOS::~ArikeOS()
